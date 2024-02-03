@@ -8,7 +8,7 @@ from ads.models import Property
 from ads.serializers import PropertySerializer
 
 class AllRealtorApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request):
         all_realtor = Realtor.objects.filter(is_active =True,is_block =False)
         ser_data = RealtorSerializer(instance=all_realtor,many=True)
@@ -16,7 +16,7 @@ class AllRealtorApiView(APIView):
 
 
 class AllUnacceptedRealtorApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request):
         all_realtor = Realtor.objects.filter(is_active=False, is_block=False)
         ser_data = RealtorSerializer(instance=all_realtor, many=True)
@@ -25,14 +25,14 @@ class AllUnacceptedRealtorApiView(APIView):
         return Response(ser_data.data, status=status.HTTP_200_OK)
 
 class AllBlockRealtorApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request):
         all_realtor = Realtor.objects.filter(is_block=True)
         ser_data = RealtorSerializer(instance=all_realtor, many=True)
         return Response(ser_data.data, status=status.HTTP_200_OK)
 
 class RejectRequestApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request,id):
         realtor = Realtor.objects.filter(id=id)
         if not realtor.exists():
@@ -43,7 +43,7 @@ class RejectRequestApiView(APIView):
 
 
 class BlockRealtorApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request,id):
         realtor = Realtor.objects.filter(id=id)
         if not realtor.exists():
@@ -55,7 +55,7 @@ class BlockRealtorApiView(APIView):
         return Response({'detail':'realtor block successfully'},status=status.HTTP_200_OK)
 
 class ActiveRealtorApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request,id):
         realtor = Realtor.objects.filter(id=id)
         if not realtor.exists():
@@ -67,7 +67,7 @@ class ActiveRealtorApiView(APIView):
         return Response({'detail': 'realtor active successfully'}, status=status.HTTP_200_OK)
 
 class ActiveAdsApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request,id):
         ad = Property.objects.filter(id=id)
         if not ad.exists():
@@ -79,7 +79,7 @@ class ActiveAdsApiView(APIView):
         return Response({'detail': 'ad active successfully'}, status=status.HTTP_200_OK)
 
 class DeleteAdsApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request,id):
         ad = Property.objects.filter(id=id)
         if not ad.exists():
@@ -89,7 +89,7 @@ class DeleteAdsApiView(APIView):
         return Response({'detail':'ads delete successfully'},status=status.HTTP_200_OK)
 
 class AllUnacceptedAdsApiView(APIView):
-    permission_classes = ()
+    permission_classes = (IsAdminUser,)
     def get(self,request):
         ads= Property.objects.filter(is_active=False)
         ser_data = PropertySerializer(instance=ads, many=True)
