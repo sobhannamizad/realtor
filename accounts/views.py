@@ -25,7 +25,7 @@ class BecomeRealtorApiView(APIView):
         get address / rate / description
         """
         if request.user.is_realtor ==True:
-            return Response({"details":"you are a realtor"})
+            return Response({"details":"you are a realtor"},status=status.HTTP_400_BAD_REQUEST)
         ser_data =RealtorSerializer(data=request.POST)
         if ser_data.is_valid():
             ser_data.save(user=request.user)
