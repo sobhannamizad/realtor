@@ -44,14 +44,14 @@ class RejectRequestApiView(APIView):
 class BlockRealtorApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
-        realtor = Realtor.objects.filter(id=id)
-        if not realtor.exists():
-            return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
-        realtor = realtor.first()
-        realtor.is_block =True
-        realtor.save()
-        # TODO : send sms to user and say request is reject
-        return Response({'detail':'realtor block successfully'},status=status.HTTP_200_OK)
+        try:
+            realtor = Realtor.objects.filter(id=id)
+            realtor.is_block =True
+            realtor.save()
+            # TODO : send sms to user and say request is reject
+            return Response({'detail':'realtor block successfully'},status=status.HTTP_200_OK)
+        except:
+            return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
 
 class ActiveRealtorApiView(APIView):
     permission_classes = (IsAdminUser,)
