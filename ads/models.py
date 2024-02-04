@@ -16,4 +16,4 @@ class Property(models.Model):
     image = models.ImageField(upload_to='ads',blank=True,null=True)
     is_active = models.BooleanField(default=False)
     is_close = models.BooleanField(default=False)
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
