@@ -1,9 +1,10 @@
 from django.urls import path
 from .views import (RealtorDetailApiView,AddAdsApiView,AllAdsApiView,
                     UpdateAdsApiView,DeleteAdsApiView,CloseAdsApiView,
-                    AdsDetailApiView,AllMyAdsApiView)
+                    AdsDetailApiView,AllMyAdsApiView,AllRealtorApiView)
 
 urlpatterns =[
+    path('realtor/',AllRealtorApiView.as_view()),
     path('realtor/<int:id>/',RealtorDetailApiView.as_view()),
     path('update/<int:id>/',UpdateAdsApiView.as_view()),
     path('delete/<int:id>/',DeleteAdsApiView.as_view()),

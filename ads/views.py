@@ -10,14 +10,18 @@ from rest_framework.permissions import IsAuthenticated
 
 class RealtorDetailApiView(APIView):
     def get(self,request,id):
-        realtor = Realtor.objects.filter(id=id)
-        if realtor.exists():
-            ser_data = RealtorSerializer(instance=realtor[0])
+        try:
+            realtor = Realtor.objects.get(id=id)
+            ser_data = RealtorSerializer(instance=realtor)
             return Response(ser_data.data,status=status.HTTP_200_OK)
-        return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
 
-
-
+class AllRealtorApiView(APIView):
+    def get(self,request):
+        realtors = Realtor.objects.filter(is_active=True,is_block=False)
+        ser_data = RealtorSerializer(instance=realtors,many=True)
+        return Response(ser_data.data, status=status.HTTP_200_OK)
 class AllAdsApiView(APIView):
     def get(self,request):
         ads = Property.objects.filter(is_active=True,is_close=False)
