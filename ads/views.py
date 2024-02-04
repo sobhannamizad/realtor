@@ -22,6 +22,7 @@ class AllRealtorApiView(APIView):
         realtors = Realtor.objects.filter(is_active=True,is_block=False)
         ser_data = RealtorSerializer(instance=realtors,many=True)
         return Response(ser_data.data, status=status.HTTP_200_OK)
+
 class AllAdsApiView(APIView):
     def get(self,request):
         ads = Property.objects.filter(is_active=True,is_close=False)
@@ -34,25 +35,27 @@ class AddAdsApiView(APIView):
         """
         get: address /title/ price /description/ type /and optional data -> prepayment /image/
         """
-        if request.user.is_realtor == False:
-            return Response({'detail':'you are not a realtor'},status=status.HTTP_401_UNAUTHORIZED)
-        ser_data =PropertySerializer(data=request.POST)
-        if ser_data.is_valid():
-            ser_data.save(owner=request.user.realtor)
-            return Response(ser_data.data,status=status.HTTP_200_OK)
-        return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
+        try:
+            ser_data =PropertySerializer(data=request.POST)
+            if ser_data.is_valid():
+                ser_data.save(owner=request.user.realtor)
+                return Response(ser_data.data,status=status.HTTP_200_OK)
+            return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail': 'you are not a realtor'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class UpdateAdsApiView(APIView):
     permission_classes = (IsAuthenticated,)
     def post(self,request,id):
-        ad =Property.objects.filter(id=id)
-        if not ad.exists():
-            return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
-        ser_data = PropertySerializer(instance=ad[0],data=request.POST,partial=True)
-        if ser_data.is_valid():
-            ser_data.save()
-            return Response(ser_data.data,status=status.HTTP_200_OK)
-        return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
+        try:
+            ad =Property.objects.filter(id=id)
+            ser_data = PropertySerializer(instance=ad,data=request.POST,partial=True)
+            if ser_data.is_valid():
+                ser_data.save()
+                return Response(ser_data.data,status=status.HTTP_200_OK)
+            return Response(ser_data.errors, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeleteAdsApiView(APIView):
