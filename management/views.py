@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser,IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from accounts.models import Realtor
 from accounts.serializers import RealtorSerializer
@@ -45,7 +45,7 @@ class BlockRealtorApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
         try:
-            realtor = Realtor.objects.filter(id=id)
+            realtor = Realtor.objects.get(id=id)
             realtor.is_block =True
             realtor.save()
             # TODO : send sms to user and say request is reject
@@ -57,7 +57,7 @@ class ActiveRealtorApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
         try:
-            realtor = Realtor.objects.filter(id=id)
+            realtor = Realtor.objects.get(id=id)
             realtor.is_active = True
             realtor.save()
             # TODO : send sms to user and say request is reject
@@ -69,7 +69,7 @@ class ActiveAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
         try:
-            ad = Property.objects.filter(id=id)
+            ad = Property.objects.get(id=id)
             ad.is_active = True
             ad.save()
             # TODO : send sms to user and say request is reject
