@@ -5,7 +5,10 @@
 *.log
 *.pot
 *.pyc
-__pycache__
+A/__pycache__/
+accounts/__pycache__/
+ads/__pycache__/
+management/__pycache__/
 __pycache__/
 local_settings.py
 db.sqlite3
