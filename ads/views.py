@@ -72,15 +72,15 @@ class DeleteAdsApiView(APIView):
 
 class CloseAdsApiView(APIView):
     def get(self,request,id):
-        ad = Property.objects.filter(id=id)
-        if not ad.exists():
-            return Response({'detail': 'invalid id'},status=status.HTTP_400_BAD_REQUEST)
-        ad = ad.first()
-        if ad.owner == request.user.realtor:
-            ad.is_close = True
-            ad.save()
-            return Response({'detail': 'ad close successfully'}, status=status.HTTP_200_OK)
-        return Response({'detail': 'you are not the owner'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            ad = Property.objects.get(id=id)
+            if ad.owner == request.user.realtor:
+                ad.is_close = True
+                ad.save()
+                return Response({'detail': 'ad close successfully'}, status=status.HTTP_200_OK)
+            return Response({'detail': 'you are not the owner'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AdsDetailApiView(APIView):
     def get(self,request,id):
