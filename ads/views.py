@@ -84,12 +84,13 @@ class CloseAdsApiView(APIView):
 
 class AdsDetailApiView(APIView):
     def get(self,request,id):
-        ad = Property.objects.filter(id=id)
-        if not ad.exists():
-            return Response({'detail': 'invalid id'},status=status.HTTP_400_BAD_REQUEST)
-        ser_data = PropertySerializer(instance=ad[0])
-        context ={'ads':ser_data.data,'more detail':[ad[0].owner.description,ad[0].owner.rate,ad[0].owner.address]}
-        return Response(context,status=status.HTTP_200_OK)
+        try:
+            ad = Property.objects.get(id=id)
+            ser_data = PropertySerializer(instance=ad)
+            context ={'ads':ser_data.data,'more detail':[ad.owner.description,ad.owner.rate,ad.owner.address]}
+            return Response(context,status=status.HTTP_200_OK)
+        except:
+            return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
 
 class AllMyAdsApiView(APIView):
     permission_classes = (IsAuthenticated,)
