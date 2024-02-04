@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import  status
+from rest_framework import status
 from .serializers import UserSerializer,RealtorSerializer
 from rest_framework.permissions import IsAuthenticated
 from .models import Realtor
@@ -25,7 +25,7 @@ class BecomeRealtorApiView(APIView):
         get address / rate / description
         """
         if request.user.is_realtor ==True:
-            return Response({"details":"you are a realtor"})
+            return Response({"details":"you are a realtor"},status=status.HTTP_400_BAD_REQUEST)
         ser_data =RealtorSerializer(data=request.POST)
         if ser_data.is_valid():
             ser_data.save(user=request.user)

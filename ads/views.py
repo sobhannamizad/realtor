@@ -48,7 +48,7 @@ class UpdateAdsApiView(APIView):
     permission_classes = (IsAuthenticated,)
     def post(self,request,id):
         try:
-            ad =Property.objects.filter(id=id)
+            ad =Property.objects.get(id=id)
             ser_data = PropertySerializer(instance=ad,data=request.POST,partial=True)
             if ser_data.is_valid():
                 ser_data.save()
@@ -61,14 +61,14 @@ class UpdateAdsApiView(APIView):
 class DeleteAdsApiView(APIView):
     permission_classes = (IsAuthenticated,)
     def delete(self,request,id):
-        ad = Property.objects.filter(id=id)
-        if not ad.exists():
+        try:
+            ad = Property.objects.get(id=id)
+            if ad.owner == request.user.realtor:
+                ad.delete()
+                return Response({'detail': 'ad deleted successfully'}, status=status.HTTP_200_OK)
+            return Response({'detail': 'you are not the owner'}, status=status.HTTP_400_BAD_REQUEST)
+        except:
             return Response({'detail': 'invalid id'},status=status.HTTP_400_BAD_REQUEST)
-        if ad[0].owner == request.user.realtor:
-            ad[0].delete()
-            return Response({'detail':'ad deleted successfully'},status=status.HTTP_200_OK)
-        return Response({'detail':'you are not the owner'},status=status.HTTP_400_BAD_REQUEST)
-
 
 class CloseAdsApiView(APIView):
     def get(self,request,id):
