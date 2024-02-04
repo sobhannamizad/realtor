@@ -80,12 +80,13 @@ class ActiveAdsApiView(APIView):
 class DeleteAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
-        ad = Property.objects.filter(id=id)
-        if not ad.exists():
-            return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
-        ad[0].delete()
-        # TODO : send sms to user and say ads is deleted
-        return Response({'detail':'ads delete successfully'},status=status.HTTP_200_OK)
+        try:
+            ad = Property.objects.get(id=id)
+            ad.delete()
+            # TODO : send sms to user and say ads is deleted
+            return Response({'detail':'ads delete successfully'},status=status.HTTP_200_OK)
+        except:
+            return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AllUnacceptedAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
