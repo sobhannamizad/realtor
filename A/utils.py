@@ -1,4 +1,6 @@
-from django.contrib.auth.mixins import UserPassesTestMixin
-class UserNotAuthenticated(UserPassesTestMixin):
-    def test_func(self) :
-        return not self.request.user.is_authenticated
+from rest_framework.permissions import BasePermission
+class UserNotAuthenticated(BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return False
+        return True

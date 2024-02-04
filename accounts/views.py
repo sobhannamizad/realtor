@@ -3,16 +3,15 @@ from rest_framework.response import Response
 from rest_framework import  status
 from .serializers import UserSerializer,RealtorSerializer
 from rest_framework.permissions import IsAuthenticated
-from django.shortcuts import get_object_or_404
 from .models import Realtor
+from A.utils import UserNotAuthenticated
 
 class UserRegisterApiView(APIView):
+    permission_classes = (UserNotAuthenticated,)
     def post(self,request):
         """
         get full_name phone_number code (optional) and password then create user
         """
-        if request.user.is_authenticated:
-            return Response({'details':'you are a registered user you can not register again'},status=status.HTTP_400_BAD_REQUEST)
         ser_data =UserSerializer(data=request.POST)
         if ser_data.is_valid():
             ser_data.save()
@@ -37,6 +36,7 @@ class BecomeRealtorApiView(APIView):
         return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class UpdateUserApiView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self,request):
         ser_data = UserSerializer(instance=request.user,data=request.POST,partial=True)
         if ser_data.is_valid():
@@ -47,6 +47,7 @@ class UpdateUserApiView(APIView):
         return Response(ser_data.errors,status=status.HTTP_401_UNAUTHORIZED)
 
 class UpdateRealtorApiView(APIView):
+    permission_classes = (IsAuthenticated,)
     def post(self,request):
         try:
             realtor =Realtor.objects.get(user=request.user)
