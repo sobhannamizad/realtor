@@ -20,8 +20,6 @@ class AllUnacceptedRealtorApiView(APIView):
     def get(self,request):
         all_realtor = Realtor.objects.filter(is_active=False, is_block=False)
         ser_data = RealtorSerializer(instance=all_realtor, many=True)
-        for i in all_realtor:
-            print(i.id)
         return Response(ser_data.data, status=status.HTTP_200_OK)
 
 class AllBlockRealtorApiView(APIView):
@@ -34,12 +32,13 @@ class AllBlockRealtorApiView(APIView):
 class RejectRequestApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
-        realtor = Realtor.objects.filter(id=id)
-        if not realtor.exists():
-            return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
-        realtor[0].delete()
+        try:
+            realtor = Realtor.objects.get(id=id)
+            realtor.delete()
         # TODO : send sms to user and say request is reject
-        return Response({'detail':'request reject successfully'},status=status.HTTP_200_OK)
+            return Response({'detail':'request reject successfully'},status=status.HTTP_200_OK)
+        except:
+            return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class BlockRealtorApiView(APIView):
