@@ -68,14 +68,14 @@ class ActiveRealtorApiView(APIView):
 class ActiveAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
-        ad = Property.objects.filter(id=id)
-        if not ad.exists():
+        try:
+            ad = Property.objects.filter(id=id)
+            ad.is_active = True
+            ad.save()
+            # TODO : send sms to user and say request is reject
+            return Response({'detail': 'ad active successfully'}, status=status.HTTP_200_OK)
+        except:
             return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
-        ad = ad.first()
-        ad.is_active = True
-        ad.save()
-        # TODO : send sms to user and say request is reject
-        return Response({'detail': 'ad active successfully'}, status=status.HTTP_200_OK)
 
 class DeleteAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
