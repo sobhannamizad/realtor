@@ -4,12 +4,13 @@ from .views import (UserRegisterApiView,BecomeRealtorApiView,
                     )
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
+app_name ='accounts'
 
 urlpatterns =[
-    path('register/',UserRegisterApiView.as_view()),
-    path('BecomeRealtor/',BecomeRealtorApiView.as_view()),
-    path('update/',UpdateUserApiView.as_view()),
-    path('update/realtor/',UpdateRealtorApiView.as_view()),
-    path('token/', TokenObtainPairView.as_view()),
-    path('token/refresh/', TokenRefreshView.as_view()),
+    path('register/',UserRegisterApiView.as_view(),name='register'),
+    path('BecomeRealtor/',BecomeRealtorApiView.as_view(),name='BecomeRealtor'),
+    path('update/',UpdateUserApiView.as_view(),name='update-user'),
+    path('update/realtor/',UpdateRealtorApiView.as_view(),name='update-realtor'),
+    path('token/', TokenObtainPairView.as_view(),name='token'),
+    path('token/refresh/', TokenRefreshView.as_view(),name='refresh-token'),
 ]

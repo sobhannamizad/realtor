@@ -4,16 +4,17 @@ from .views import (RealtorDetailApiView,AddAdsApiView,AllAdsApiView,
                     AdsDetailApiView,AllMyAdsApiView,AllRealtorApiView,
                     SearchApiView)
 
+app_name='ads'
 urlpatterns =[
-    path('realtor/',AllRealtorApiView.as_view()),
-    path('realtor/<int:id>/',RealtorDetailApiView.as_view()),
-    path('update/<int:id>/',UpdateAdsApiView.as_view()),
-    path('delete/<int:id>/',DeleteAdsApiView.as_view()),
-    path('close/<int:id>/',CloseAdsApiView.as_view()),
-    path('add/',AddAdsApiView.as_view()),
-    path('my-ads/',AllMyAdsApiView.as_view()),
-    path('detail/<int:id>/',AdsDetailApiView.as_view()),
-    path('search/<str:data>/',SearchApiView.as_view()),
-    path('',AllAdsApiView.as_view()),
+    path('realtors/',AllRealtorApiView.as_view(),name='all-realtors'),
+    path('realtor/<int:id>/',RealtorDetailApiView.as_view(),name='detail-realtor'),
+    path('update/<int:id>/',UpdateAdsApiView.as_view(),name='update-ads'),
+    path('delete/<int:id>/',DeleteAdsApiView.as_view(),name='delete-ads'),
+    path('close/<int:id>/',CloseAdsApiView.as_view(),name='close-ads'),
+    path('add/',AddAdsApiView.as_view(),name='add-ads'),
+    path('my-ads/',AllMyAdsApiView.as_view(),name='my-ads'),
+    path('detail/<int:id>/',AdsDetailApiView.as_view(),name='detail-ads'),
+    path('search/<str:data>/',SearchApiView.as_view(),name='search'),
+    path('',AllAdsApiView.as_view(),name='all=ads'),
 
 ]
