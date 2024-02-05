@@ -5,5 +5,5 @@ This project is a real estate platform where both agents and regular users can r
 ads mean :Advertisements
 ad mean : Advertisement
 realtor mean: real state agent
-##### last upadte: 2024/02/04
+##### last upadte: 2024/02/05
 #### created at : 2024/01/31

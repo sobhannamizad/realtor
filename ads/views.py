@@ -6,7 +6,7 @@ from accounts.serializers import RealtorSerializer
 from .serializers import PropertySerializer
 from .models import Property
 from rest_framework.permissions import IsAuthenticated
-
+from django.contrib.postgres.search import SearchVector
 
 class RealtorDetailApiView(APIView):
     def get(self,request,id):
@@ -100,3 +100,12 @@ class AllMyAdsApiView(APIView):
         ads = Property.objects.filter(owner=request.user.realtor)
         ser_data = PropertySerializer(instance=ads,many=True)
         return Response(ser_data.data,status=status.HTTP_200_OK)
+
+class SearchApiView(APIView):
+    def get(self,request,data):
+        realtors = Realtor.objects.annotate(search=SearchVector('description','address'),).filter(search=data)
+        ser_data  =RealtorSerializer(instance=realtors,many=True)
+        Ads = Property.objects.annotate(search=SearchVector('description', 'title','address'), ).filter(search=data)
+        ser_data_2 = PropertySerializer(instance=Ads, many=True)
+        context ={'realtor':ser_data.data,'ads':ser_data_2.data}
+        return Response(context,status=status.HTTP_200_OK)
