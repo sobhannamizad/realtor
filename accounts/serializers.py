@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User,Realtor
+from accounts.models import User,Realtor,Vote
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
@@ -21,5 +21,8 @@ class RealtorSerializer(serializers.ModelSerializer):
     user = serializers.CharField(read_only=True)
     class Meta:
         model= Realtor
-        fields =('id','user','address','rate','description')
+        fields =('id','user','address','rate','description','stars_average')
 
+class VoteSerializer(serializers.Serializer):
+    realtor = serializers.CharField(required=True)
+    vote = serializers.IntegerField(required=True,max_value=5,min_value=0)
