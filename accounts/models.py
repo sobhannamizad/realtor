@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from .manager import UserManager
+from django.core.validators import MinValueValidator,MaxValueValidator
 
 class User(AbstractBaseUser):
     # define fields - is_realtor means real state agent
@@ -30,7 +31,14 @@ class Realtor(models.Model):
     address =models.TextField()
     description =models.TextField(blank=True,null=True)
     rate = models.PositiveIntegerField()
+    stars_average = models.IntegerField(validators=[MaxValueValidator(5),MinValueValidator(0)])
     is_block = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.phone_number} -{self.is_active}"
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    vote =models.IntegerField(validators=[MaxValueValidator(5),MinValueValidator(0)])
+    realtor = models.ForeignKey(Realtor,on_delete=models.CASCADE,related_name='stars')
