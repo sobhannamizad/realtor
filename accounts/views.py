@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import UserSerializer,RealtorSerializer
+from .serializers import UserSerializer,RealtorSerializer,VoteSerializer
 from rest_framework.permissions import IsAuthenticated
-from .models import Realtor
+from .models import Realtor,Vote
 from A.utils import UserNotAuthenticated
 
 class UserRegisterApiView(APIView):
@@ -58,3 +58,28 @@ class UpdateRealtorApiView(APIView):
             return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response({'detail':'error (you ate not realtor)'},status=status.HTTP_400_BAD_REQUEST)
+
+
+class VoteRealtorApiView(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self,request):
+        ser_data =VoteSerializer(data=request.POST)
+        if ser_data.is_valid():
+            cd = ser_data.validated_data
+            try:
+                print(cd)
+                realtor = Realtor.objects.get(id=cd['realtor'])
+                print(realtor)
+            except:
+                return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
+            try:
+                vote = Vote.objects.get(user=request.user,realtor=realtor)
+                vote.vote = cd['vote']
+                vote.save()
+            except:
+                Vote.objects.create(user=request.user,realtor=realtor,vote=cd['vote'])
+            average = realtor.calculate_average_stars()
+            realtor.stars_average = average
+            realtor.save()
+            return Response(ser_data.data,status=status.HTTP_201_CREATED)
+        return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)

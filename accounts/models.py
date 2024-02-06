@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from .manager import UserManager
 from django.core.validators import MinValueValidator,MaxValueValidator
+from django.db.models import Avg
 
 class User(AbstractBaseUser):
     # define fields - is_realtor means real state agent
@@ -31,11 +32,16 @@ class Realtor(models.Model):
     address =models.TextField()
     description =models.TextField(blank=True,null=True)
     rate = models.PositiveIntegerField()
-    stars_average = models.IntegerField(validators=[MaxValueValidator(5),MinValueValidator(0)])
+    stars_average = models.IntegerField(null=True,blank=True,validators=[MaxValueValidator(5),MinValueValidator(0)])
     is_block = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.phone_number} -{self.is_active}"
+
+    def calculate_average_stars(self):
+        stars = self.stars.all()
+        return stars.aggregate(Avg("vote",))['vote__avg']
+
 
 
 class Vote(models.Model):
