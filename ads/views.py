@@ -8,6 +8,7 @@ from .models import Property
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.postgres.search import SearchVector
 
+
 class RealtorDetailApiView(APIView):
     def get(self,request,id):
         try:
