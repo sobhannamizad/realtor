@@ -1,5 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -9,8 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z@pr_3-zj(p#e8-cq4mxe_1ga==p4(y(34l_s*)7(+wf@n7ckt'
-
+SECRET_KEY =os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -72,11 +74,11 @@ WSGI_APPLICATION = 'A.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME':'realtor',
+        'NAME':os.environ.get('DATABASE_NAME'),
         'HOST':'127.0.0.1',
         'PORT':'5432',
-        'USER':'postgres',
-        'PASSWORD':'postgres',
+        'USER':os.environ.get('DATABASE_USER'),
+        'PASSWORD':os.environ.get('POSTGRES_PASSWORD'),
     }
 }
 

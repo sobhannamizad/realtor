@@ -4,3 +4,4 @@ class UserNotAuthenticated(BasePermission):
         if request.user.is_authenticated:
             return False
         return True
+
