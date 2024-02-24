@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from accounts.models import User,Realtor,Vote
+from accounts.models import User,Realtor,OTP
 from django.contrib.auth.hashers import make_password
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ('full_name','password','phone_number','code',)
+        fields = ('full_name','password','email','code',)
 
     def validate_password(self, value):
         """
@@ -26,3 +26,8 @@ class RealtorSerializer(serializers.ModelSerializer):
 class VoteSerializer(serializers.Serializer):
     realtor = serializers.CharField(required=True)
     vote = serializers.IntegerField(required=True,max_value=5,min_value=0)
+
+class OTPSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OTP
+        fields =('code',)
