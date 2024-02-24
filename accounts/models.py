@@ -9,6 +9,7 @@ class User(AbstractBaseUser):
     phone_number = models.CharField(max_length=11,unique=True)
     full_name = models.CharField(max_length=200,unique=True)
     code = models.CharField(max_length=10,blank=True,null=True,unique=True)
+    balance = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
     is_realtor =models.BooleanField(default=False)
     is_admin =models.BooleanField(default=False)
@@ -25,6 +26,9 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+    def __str__(self):
+        return f"{self.full_name} - {self.balance} - {self.is_realtor}"
 
 class Realtor(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
