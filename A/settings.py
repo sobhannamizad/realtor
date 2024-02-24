@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'management.apps.ManagementConfig',
     'ads.apps.AdsConfig',
+    'carts.apps.CartsConfig',
 ]
 
 MIDDLEWARE = [
