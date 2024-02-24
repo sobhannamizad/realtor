@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import(AllRealtorApiView,AllUnacceptedRealtorApiView,AllBlockRealtorApiView,
                    RejectRequestApiView,BlockRealtorApiView,ActiveRealtorApiView,
-                   AllUnacceptedAdsApiView,ActiveAdsApiView,DeleteAdsApiView)
+                   AllUnacceptedAdsApiView,ActiveAdsApiView,DeleteAdsApiView,
+                   AddBalanceToUserApiView)
 
 app_name='management'
 
@@ -15,4 +16,5 @@ urlpatterns=[
     path('active/ads/<int:id>/',ActiveAdsApiView.as_view(),name='active-ads'),
     path('delete/ads/<int:id>/',DeleteAdsApiView.as_view(),name='delete-ads'),
     path('all/ads/',AllUnacceptedAdsApiView.as_view(),name='all-unaccepted-ads'),
+    path('add-balance/',AddBalanceToUserApiView.as_view(),name='add-balance'),
 ]

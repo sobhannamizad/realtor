@@ -2,10 +2,11 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
-from accounts.models import Realtor
+from accounts.models import Realtor,User
 from accounts.serializers import RealtorSerializer
 from ads.models import Property
 from ads.serializers import PropertySerializer
+from management.serializers import BalanceSerializer
 
 class AllRealtorApiView(APIView):
     permission_classes = (IsAdminUser,)
@@ -94,3 +95,31 @@ class AllUnacceptedAdsApiView(APIView):
         ads= Property.objects.filter(is_active=False)
         ser_data = PropertySerializer(instance=ads, many=True)
         return Response(ser_data.data, status=status.HTTP_200_OK)
+
+
+class AddBalanceToUserApiView(APIView):
+    permission_classes = (IsAdminUser,)
+    def post(self,request):
+        # get id(user id) and amount
+        ser_data = BalanceSerializer(data=request.POST)
+        if ser_data.is_valid():
+            cd = ser_data.validated_data
+            try:
+                user = User.objects.get(id=cd['id'])
+            except:
+                return Response({"detail":'invalid id'})
+            user.balance += cd['amount']
+            user.save()
+            return Response({"detail":f'to {user.full_name} - add {cd["amount"]} - successfully'},status=status.HTTP_200_OK)
+        return Response(ser_data.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+

@@ -28,7 +28,7 @@ class User(AbstractBaseUser):
         return self.is_admin
 
     def __str__(self):
-        return f"{self.full_name} - {self.balance} - {self.is_realtor}"
+        return f"id: {self.id} - {self.full_name} - {self.balance} - {self.is_realtor}"
 
 class Realtor(models.Model):
     user = models.OneToOneField(User,on_delete=models.CASCADE)
