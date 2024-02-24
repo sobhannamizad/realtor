@@ -41,6 +41,18 @@ class PayApiView(APIView):
                 property.is_active = False
                 property.save()
                 return Response({"detail":'cart paid successfully'},status=status.HTTP_201_CREATED)
+
+            if cart.user == request.user and cart.property.is_close == False and request.user.balance >= cart.property.prepayment:
+                request.user.balance = request.user.balance - cart.property.prepayment
+                request.user.save()
+                cart.is_paid = True
+                cart.save()
+                property = cart.property
+                property.is_close = True
+                property.is_active = False
+                property.save()
+                return Response({"detail":'cart paid  a prepayment successfully'},status=status.HTTP_201_CREATED)
+            
             return Response('error',status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
