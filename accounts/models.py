@@ -10,7 +10,7 @@ class User(AbstractBaseUser):
     full_name = models.CharField(max_length=200,unique=True)
     code = models.CharField(max_length=10,blank=True,null=True,unique=True)
     balance = models.PositiveIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_realtor =models.BooleanField(default=False)
     is_admin =models.BooleanField(default=False)
 
@@ -46,7 +46,12 @@ class Realtor(models.Model):
         stars = self.stars.all()
         return stars.aggregate(Avg("vote",))['vote__avg']
 
-
+class OTP(models.Model):
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    code = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f'{self.user} - {self.code}'
 
 class Vote(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
