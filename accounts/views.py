@@ -10,7 +10,7 @@ class UserRegisterApiView(APIView):
     permission_classes = (UserNotAuthenticated,)
     def post(self,request):
         """
-        get full_name phone_number code (optional) and password then create user
+        get full_name email code (optional) and password then create user
         """
         ser_data =UserSerializer(data=request.POST)
         if ser_data.is_valid():
@@ -67,9 +67,7 @@ class VoteRealtorApiView(APIView):
         if ser_data.is_valid():
             cd = ser_data.validated_data
             try:
-                print(cd)
                 realtor = Realtor.objects.get(id=cd['realtor'])
-                print(realtor)
             except:
                 return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)
             try:

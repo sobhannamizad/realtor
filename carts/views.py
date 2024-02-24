@@ -52,7 +52,7 @@ class PayApiView(APIView):
                 property.is_active = False
                 property.save()
                 return Response({"detail":'cart paid  a prepayment successfully'},status=status.HTTP_201_CREATED)
-            
+
             return Response('error',status=status.HTTP_400_BAD_REQUEST)
         except:
             return Response({'detail':'invalid id'},status=status.HTTP_400_BAD_REQUEST)

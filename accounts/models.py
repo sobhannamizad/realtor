@@ -6,7 +6,7 @@ from django.db.models import Avg
 
 class User(AbstractBaseUser):
     # define fields - is_realtor means real state agent
-    phone_number = models.CharField(max_length=11,unique=True)
+    email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=200,unique=True)
     code = models.CharField(max_length=10,blank=True,null=True,unique=True)
     balance = models.PositiveIntegerField(default=0)
@@ -16,7 +16,7 @@ class User(AbstractBaseUser):
 
     objects= UserManager()
 
-    USERNAME_FIELD ='phone_number'
+    USERNAME_FIELD ='email'
     REQUIRED_FIELDS = ('full_name','code',)
 
     def has_perm(self,perm,obj=None):
@@ -40,7 +40,7 @@ class Realtor(models.Model):
     is_block = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.phone_number} -{self.is_active}"
+        return f"{self.user.email} -{self.is_active}"
 
     def calculate_average_stars(self):
         stars = self.stars.all()
