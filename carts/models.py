@@ -10,4 +10,4 @@ class Cart(models.Model):
     paid_at = models.DateTimeField(blank=True,null=True)
 
     def __str__(self):
-        return f'{self.user.full_name}-{self.property.name} - {self.is_paid}'
+        return f'{self.user.full_name}-{self.property.title} - {self.is_paid}'
