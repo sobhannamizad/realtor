@@ -22,7 +22,9 @@ class UserRegisterApiView(APIView):
             user = ser_data.save()
             OTP.objects.create(user=user, code=code)
             request.session['user_email'] = user.email
-            send = send_email.apply_async([user.email, code])
+            message = f"thank you for register in our website your verify code is {code}\n realtor"
+            subject ="verify your account"
+            send = send_email.apply_async([user.email, message,subject])
             return Response(
                    {'detail': 'user register successfully please check your email and verify your account'},
                 status=status.HTTP_201_CREATED)

@@ -40,7 +40,7 @@ class Realtor(models.Model):
     is_block = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.email} -{self.is_active}"
+        return f"id: {self.id} - {self.user.email} -{self.is_active}"
 
     def calculate_average_stars(self):
         stars = self.stars.all()
