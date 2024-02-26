@@ -7,6 +7,7 @@ from accounts.serializers import RealtorSerializer
 from ads.models import Property
 from ads.serializers import PropertySerializer
 from management.serializers import BalanceSerializer
+from accounts.tasks import send_email
 
 class AllRealtorApiView(APIView):
     permission_classes = (IsAdminUser,)
@@ -35,8 +36,10 @@ class RejectRequestApiView(APIView):
     def get(self,request,id):
         try:
             realtor = Realtor.objects.get(id=id)
+            user = realtor.user
             realtor.delete()
-        # TODO : send sms to user and say request is reject
+            message = f"your request for be come a realtor in our website rejected\n realtor"
+            send = send_email.apply_async([user.email, message])
             return Response({'detail':'request reject successfully'},status=status.HTTP_200_OK)
         except:
             return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
@@ -49,7 +52,9 @@ class BlockRealtorApiView(APIView):
             realtor = Realtor.objects.get(id=id)
             realtor.is_block =True
             realtor.save()
-            # TODO : send sms to user and say request is reject
+            message = f"your account in our website blocked \n realtor"
+            subject = "account block"
+            send = send_email.apply_async([realtor.user.email, message,subject])
             return Response({'detail':'realtor block successfully'},status=status.HTTP_200_OK)
         except:
             return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
@@ -61,7 +66,9 @@ class ActiveRealtorApiView(APIView):
             realtor = Realtor.objects.get(id=id)
             realtor.is_active = True
             realtor.save()
-            # TODO : send sms to user and say request is reject
+            message = f"your request for be come a realtor in our website accepted successfully \n realtor"
+            subject = "account activate"
+            send = send_email.apply_async([realtor.user.email, message,subject])
             return Response({'detail': 'realtor active successfully'}, status=status.HTTP_200_OK)
         except:
             return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
@@ -70,10 +77,12 @@ class ActiveAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
         try:
-            ad = Property.objects.get(id=id)
-            ad.is_active = True
-            ad.save()
-            # TODO : send sms to user and say request is reject
+            advertisement = Property.objects.get(id=id)
+            advertisement.is_active = True
+            advertisement.save()
+            message = f"your advertisement {advertisement.title} - successfully active \n realtor"
+            subject = "ads activate"
+            send = send_email.apply_async([advertisement.owner.email, message,subject])
             return Response({'detail': 'ad active successfully'}, status=status.HTTP_200_OK)
         except:
             return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
@@ -82,18 +91,20 @@ class DeleteAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request,id):
         try:
-            ad = Property.objects.get(id=id)
-            ad.delete()
-            # TODO : send sms to user and say ads is deleted
-            return Response({'detail':'ads delete successfully'},status=status.HTTP_200_OK)
+            advertisement = Property.objects.get(id=id)
+            advertisement.delete()
+            message = f"your advertisement {advertisement.title} - rejected \n realtor"
+            subject = "reject Ads"
+            send = send_email.apply_async([advertisement.owner.email, message,subject])
+            return Response({'detail':'advertisement delete successfully'},status=status.HTTP_200_OK)
         except:
             return Response({'detail': 'invalid id'}, status=status.HTTP_400_BAD_REQUEST)
 
 class AllUnacceptedAdsApiView(APIView):
     permission_classes = (IsAdminUser,)
     def get(self,request):
-        ads= Property.objects.filter(is_active=False)
-        ser_data = PropertySerializer(instance=ads, many=True)
+        advertisements= Property.objects.filter(is_active=False)
+        ser_data = PropertySerializer(instance=advertisements, many=True)
         return Response(ser_data.data, status=status.HTTP_200_OK)
 
 
